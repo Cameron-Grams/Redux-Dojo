@@ -48,16 +48,18 @@ const createStore = ( reducer ) => {
 // this is the lbirary call from examples
 const store = createStore( counter );
 
-const Wrapper = ( props ) => {
-  return( <div>{ props.updateC }</div>)
+const Wrapper = ( ) => {
+  return( <div></div>)
 };
 
 
+
 // this is a unique instance of render drafted for the example 
+// this is a bad implementation since it changes the state, value, as a side effect, the return is not used... 
 const render = () => {
- // const newState = store.getState();
- // document.getElementById( 'root' ).innerText = newState;
-  return(<Wrapper updateC={ store.getState() } /> )
+  const newState = store.getState();
+  document.getElementById( 'root' ).innerText = newState;
+  return(<Wrapper /> )
 };
 
 // document.body.innerText = store.getState();
@@ -67,7 +69,6 @@ render();
 
 document.addEventListener( 'click', () => {
   store.dispatch( {type: 'INCREMENT' } );
-  console.log( store.getState() );
 } );
 
 export default render;  
