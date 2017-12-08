@@ -1,12 +1,12 @@
-import { VisibilityFilters } from './actions/actions';
+import { combineReducer } from 'redux'; 
 
-const { SHOW_ALL } = VisibilityFilters;
+import { 
+    ADD_TODO,
+    TOGGLE_TODO,
+    SET_VISIBILITY_FILTER,
+    VisibilityFilters } from './actions/actions';
 
-const initialState = {
-    visibilityFilter: VisibilityFilters.SHOW_ALL,
-    todos: []
-  };
-
+const { SHOW_ALL } = VisibilityFilters; 
 
 function todos( state = [], action ){
     switch( action.type ){
@@ -40,6 +40,26 @@ function visibilityFilter( state = SHOW_ALL, action ){
     }
 }
 
+
+function todoApp( state = { }, action ){
+    return {
+        visibilityFilter: visibilityFilter( state.visibilityFilter, action ),
+        todos: todos( state.todos, action )
+    }
+};
+
+export default todoApp; 
+
+/* Equivalent:
+function reducer = combineReducer( {
+    visibilityFilter: visibilityFilter,
+    todos: todos
+})
+- each key value pair called with the value as a property of state
+
+
+
+/*  can be simplified to the above...
 function todoApp(state - initialState, action) {
   switch( action.type ){
       case SET_VISIBILITY_FILTER:
@@ -55,4 +75,14 @@ function todoApp(state - initialState, action) {
         return state;
     }
 }
+
+/// initialState is also abstracted out by having the sub-reducers provide the default values 
+const initialState = {
+    visibilityFilter: VisibilityFilters.SHOW_ALL,
+    todos: []
+  };
+
+
+*/
+
 
