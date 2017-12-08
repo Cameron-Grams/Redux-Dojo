@@ -40,22 +40,24 @@ function visibilityFilter( state = SHOW_ALL, action ){
     }
 }
 
-
+/*
 function todoApp( state = { }, action ){
     return {
         visibilityFilter: visibilityFilter( state.visibilityFilter, action ),
         todos: todos( state.todos, action )
     }
 };
+*/
+
+
+
+const todoApp = combineReducer( {
+    visibilityFilter,
+    todos
+} );
+
 
 export default todoApp; 
-
-/* Equivalent:
-function reducer = combineReducer( {
-    visibilityFilter: visibilityFilter,
-    todos: todos
-})
-- each key value pair called with the value as a property of state
 
 
 
