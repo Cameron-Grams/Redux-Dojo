@@ -22,3 +22,9 @@ const FilterLink = connect(
 )(Link)
 
 export default FilterLink
+
+
+
+//  the role of containers is to pass down only the amount of data to presentational components that they need; therefore dispatch will not mutate state, only
+// update a portion of state; integration takes place back on the reducer
+
