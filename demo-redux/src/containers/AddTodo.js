@@ -29,6 +29,9 @@ let AddTodo = ({ dispatch }) => {
     </div>
   )
 }
+
 AddTodo = connect()(AddTodo)
 
 export default AddTodo
+
+//  this component has the mixed Container and Presentational Component features  
