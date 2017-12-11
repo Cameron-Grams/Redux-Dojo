@@ -17,18 +17,17 @@
   font-size: large;
 }
 
-#wrapper{
+#outerWrapper{
   position: absolute;
   top: 5%;
   width: 100%;
 }
 
-#output{
-  width: 20%;
+#innerWrapper{
+  width: 40%;
   border: 1px solid black;
   border-radius: 5px;
   font-size: 1.5em;
-  text-align: center;
   margin: auto;
   padding: 10px;
 }
