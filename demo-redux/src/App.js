@@ -49,6 +49,7 @@ const createStore = ( reducer ) => {
 const store = createStore( counter );
 
 const Wrapper = ( props ) => {
+  console.log( props ); 
   return( <div>{ props.updateC }</div>)
 };
 
@@ -68,6 +69,7 @@ render();
 document.addEventListener( 'click', () => {
   store.dispatch( {type: 'INCREMENT' } );
   console.log( store.getState() );
+  render();
 } );
 
 export default render;  
