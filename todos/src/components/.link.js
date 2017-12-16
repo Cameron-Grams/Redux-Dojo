@@ -26,3 +26,9 @@ Link.propTypes = {
 }
 
 export default Link
+
+
+// this logic was moved into the routing; the effect of the onClick was made a function of the NavLink logic
+
+
+
