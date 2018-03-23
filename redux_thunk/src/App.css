@@ -1,0 +1,19 @@
+.App {
+  text-align: center;
+}
+
+ul{
+  text-align: left;
+  margin-left: 15px;
+}
+
+.shell{
+  width: 30%;
+  border: 1px solid black;
+  border-radius: 3px;
+  margin: 10% auto;
+}
+
+.outer{
+  width: 100%;
+}
