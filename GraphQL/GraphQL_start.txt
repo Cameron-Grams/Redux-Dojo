@@ -1,0 +1,276 @@
+
+Start
+
+*Re-read and rabbit hole: https://blog.graph.cool/top-5-reasons-to-use-graphql-b60cfa683511
+* MORE:  https://dev-blog.apollodata.com/graphql-explained-5844742f195e
+
+
+Graph query language to communicate between client and server in a more efficient way than REST; declarative 
+    fetching
+
+schema definition language ( SDL ); way to send specifications for data; avoids under and over fetching data
+
+resolver functions; perform the actual queries and return the data to the client; 
+    able to provide metrics for performance insights
+
+"data" is the root property of the GraphQL query response; typically there is a single end-point exposed on the 
+    API and data is specified in the query through SDL
+
+GraphQL uses a strong type system in queries ( ?? )-- to define API capabilities; written with the SDL;
+
+    type Person{
+        name: String!
+        age: Int!
+        posts: [ Post! ]!
+    }
+
+    ! indicates that the field is required
+
+    type Post{
+        title: String!
+        author: Person!
+    }
+
+    > This is a one to many relationship with the Person type has an array of Post types associated with their
+      entry
+
+Queries: allPersons is the root field, name is the payload
+
+    { 
+        allPersons( last: 2 ) {
+           name
+           posts{
+               title
+           }
+        }
+    }
+
+    > this query returns the titles of the last two people to make posts
+
+Changes to data on the back-end are made with mutations: Creating, Updating, Destroying
+
+    mutation {
+        createPerson ( name: "Jimmy", age: 42 ){
+            name
+            age
+            id
+        }
+    }
+
+    > this mutation will create a 42 year old Person named Jimmy and show the id associated with the entry
+
+Subscriptions; real time notification of changes to the database from events ( * ) 
+
+    subscription {
+        newPerson {
+            name
+            age
+        }
+    }
+
+Schema define the options possible with the API: contract between the client and the server
+    - specifies the root types
+
+
+
+    type Query {                              <-- this configuration can not find a single person or post
+        allPersons: [ Person! ]!
+        allPosts( last: Int ): [ Post! ]!     <-- this will permit the reading of posts
+    }
+
+    type Query {
+        allPersons( last: Int ): [ Person! ]!  <-- this last argument is not restrictive but an antipicpated
+    }                                              option that must be defined; ! would be restrictive
+
+    type Mutation {
+        createPerson( name: String!, age: Int! ): Person!
+        updatePerson( id: ID!, name: String!, age: String! ): Person!
+        deletePerson( id: ID! ): Person! 
+        createPost( title: String! ): Post!
+        updatePost( id: ID!, title: String! ): Post!
+        deletePost( id: ID! ): Post!
+    }
+
+    type Subscription {
+        newPerson: Person!
+        updatedPerson: Person!
+        deletedPerson: Person!
+        newPost: Post!
+        updatedPost: Post!
+        deletedPost: Post!
+    }
+
+    type Person {
+        name: String!
+        age: Int!
+        posts: [ Post! ]!
+    }
+
+    type Post {
+        title: String!
+        author: Person!
+    }
+
+
+    > creation of posts and persons have to be associated... 
+
+
+Architecture:
+
+The GraphQL integration with the database can take different forms based on whether the database was set up 
+    originally to work with GraphQl or is a legacy system
+
+Use Cases:
+1: connected database:
+    - most common with "green field" projects
+    - single server resolves the GraphQl query and returns data from the database
+   
+2: use GraphQL to integrate different existing systems
+    - hides the complexity inherent in the different systems 
+    
+3: combination of the  2
+
+> the ability to manage these different scenarios hinges on the role played by the resolver functions
+    - a single resolver function corresponds to a single field in a GraphQL query; it is responsible for
+      returning the data for that field
+
+      query {
+          User( id: "xxxx" ){
+              name
+              friends( first: 5 ){
+                  name
+                  age
+              }
+          }
+      }
+
+      Requires the following resolver functions:
+
+      User( id: String! ): User
+      name( user: User! ): String!
+      age( user: User! ): Int!
+      friends( user: User!, int: Int! ): [ User! ]!
+
+Compare GraphQL ( declarative queries ) to traditional imperative queries:
+traditional imperative:
+1. http request for resource
+2. data retrieved
+3. data stored
+4. data parsed and managed
+5. data displayed
+
+declarative:           <- other functions are performed on the 
+1. describe data          Back End
+2. display data 
+
+
+Client side issues:
+1. tree from application data:
+    - root query: query defines the path to develop the query tree; fields in the query specify the edges to 
+      be followed to arrive at the data at a particular node
+   "GraphQL query results are trees of information from server side data graphs."
+    -Query Results Trees
+
+2. caching the results of queries prevents future queries from having to retrieve the same data a second time
+    "same path, same object"
+    - can be over-riden with the forceFetch option
+
+3. query results have unique object identifiers to specify what was retrieved and ensure it is cached and reused
+   as appropriate
+
+
+Server side issues:
+GraphQL is impletmented on the server
+
+Resolver functions in the server return the actual data for the fields
+    - resolver functions are chained, as data field becomes more specific the details are passed down the 
+      resolvers 
+
+An Autoloader tool will prevent multiple calls with the same query; it waits until all resolvers have run 
+    then only fetches the needed items
+
+
+
+Introspection:
+A client can ask the server for details on schema 
+
+    query{
+        __schema{
+            types{
+                name
+            }
+        }
+    }
+
+able to query fields:
+
+    {
+      __type(name: "Author") {
+        name
+        description
+      }
+    }
+
+
+Security Options:
+1. Timeout for length of query
+2. Max depth
+3. Query complexity
+4. Throtteling
+
+//========================================================
+Apollo
+
+https://github.com/howtographql/react-apollo
+
+server on localhost://4000 brings up the IDE environment
+  - the application... 
+
+client-side; 
+  - sending the query as a higher order component with 'graphql' component
+  - this will return the data and make it accessible as a prop *** 
+  - gql is a template literal string function: https://wesbos.com/tagged-template-literals/
+    - this is a parser function, it creates the object that the Apollo client will send to the graphql server
+
+Mutations:
+  1. create a const with the gql parser
+  2. wrap with the graphql HOC
+  3. mutation function gets injected into the components props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
